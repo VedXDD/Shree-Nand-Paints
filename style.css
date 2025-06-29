@@ -1,0 +1,89 @@
+/* Custom Styles for Shree Nand Paints E-commerce Website */
+
+/* Base Styles & Font */
+body {
+    font-family: 'Inter', sans-serif; /* Applied Inter font from Google Fonts */
+    background-color: #000; /* Deep black background */
+    color: #fff; /* White text for contrast */
+    -webkit-font-smoothing: antialiased; /* Smoother font rendering */
+    -moz-osx-font-smoothing: grayscale;
+}
+
+/* General Drop Shadow for Titles/Headings (for depth) */
+.drop-shadow-md {
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+/* Custom styles for Tailwind CSS overrides or additions to enhance UI */
+
+/* Product Card Specific Styles */
+.product-card {
+    position: relative;
+    overflow: hidden; /* Ensures rounded corners are respected for content */
+    border: 1px solid rgba(255, 255, 255, 0.08); /* Subtle border for definition */
+    transition: all 0.3s ease-in-out; /* Smooth transitions for hover effects */
+}
+
+/* Subtle gradient overlay on product cards for visual flair */
+.product-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(45deg, rgba(96, 165, 250, 0.05), transparent); /* Gradient overlay */
+    z-index: 0;
+    border-radius: 0.75rem; /* Matches card's border-radius */
+    pointer-events: none; /* Allows mouse events to pass through to content */
+}
+
+/* Hover effect for product cards: lift and slight enlarge with deeper shadow */
+.product-card:hover {
+    transform: translateY(-5px) scale(1.02); /* Lifts the card and slightly enlarges it */
+    box-shadow: 0 15px 25px rgba(0, 0, 0, 0.6); /* Deeper shadow on hover */
+    border-color: #60a5fa; /* Blue border on hover for visual feedback */
+}
+
+/* Glow effect around product images */
+.product-image {
+    box-shadow: 0 0 20px rgba(59, 130, 246, 0.6); /* Adds a blue glow effect around the image */
+}
+
+/* Cart Count Bounce Animation */
+.cart-button .animate-bounce {
+    animation: bounce 1s infinite; /* Applied to the span element that shows the cart count */
+}
+
+@keyframes bounce {
+    0%, 100% {
+        transform: translateY(-25%); /* Moves element up */
+        animation-timing-function: cubic-bezier(0.8,0,1,1); /* Easing for bounce effect */
+    }
+    50% {
+        transform: none; /* Returns to original position */
+        animation-timing-function: cubic-bezier(0,0,0.2,1); /* Easing for bounce effect */
+    }
+}
+
+
+/* Auth Modal Entrance/Exit Animation */
+/* This now targets the unified auth modal */
+#authModal .scale-95 {
+    transform: scale(0.95); /* Starts slightly scaled down */
+    opacity: 0; /* Starts fully transparent */
+}
+#authModal.active .scale-95 {
+    transform: scale(1); /* Returns to normal size */
+    opacity: 1; /* Becomes fully opaque */
+}
+
+/* Toast Message Slide-Up Animation */
+#messageToast {
+    opacity: 0; /* Starts fully transparent */
+    transform: translate(-50%, 100%); /* Starts hidden, positioned below the screen */
+}
+#messageToast.show {
+    opacity: 1; /* Becomes fully opaque */
+    transform: translate(-50%, 0); /* Slides up to its visible position (centered horizontally) */
+}
