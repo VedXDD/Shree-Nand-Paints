@@ -1,5 +1,5 @@
 document.addEventListener('DOMContentLoaded', () => {
-    // --- DOM Element References ---
+   
     const productGrid = document.getElementById('productGrid');
     const toggleCartBtn = document.getElementById('toggleCartBtn');
     const closeCartBtn = document.getElementById('closeCartBtn');
@@ -8,8 +8,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const cartCountSpan = document.getElementById('cartCount');
     const cartTotalSpan = document.getElementById('cartTotal');
     const emptyCartMessage = document.getElementById('emptyCartMessage');
-    const authBtn = document.getElementById('authBtn'); // Login/Signup/Logout button
-    const authModal = document.getElementById('authModal'); // The unified authentication modal
+    const authBtn = document.getElementById('authBtn'); 
+    const authModal = document.getElementById('authModal'); 
     const closeAuthModalBtn = document.getElementById('closeAuthModalBtn');
     const authModalTitle = document.getElementById('authModalTitle');
 
@@ -125,27 +125,24 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
     /**
-     * Displays a temporary toast message at the bottom of the screen.
+     
      * @param {string} message 
      * @param {number} duration 
      */
     const showToast = (message, duration = 3000) => {
-        toastText.textContent = message; // Set the message text
-        messageToast.classList.add('show'); // Add 'show' class to trigger CSS animation
+        toastText.textContent = message; 
+        messageToast.classList.add('show'); 
         setTimeout(() => {
-            messageToast.classList.remove('show'); // Remove 'show' class to hide toast after duration
+            messageToast.classList.remove('show'); 
         }, duration);
     };
 
-    /**
-     * Renders all products from the 'products' array into the product grid.
-     * Clears any existing products before rendering to ensure fresh display.
-     */
+    
     const renderProducts = () => {
-        productGrid.innerHTML = ''; // Clear existing products HTML
+        productGrid.innerHTML = ''; 
         products.forEach(product => {
             const productCard = document.createElement('div');
-            // Apply Tailwind CSS classes along with custom 'product-card' class
+            
             productCard.className = 'product-card bg-gray-800 rounded-xl shadow-lg p-6 flex flex-col items-center transform transition duration-300 hover:scale-105 hover:shadow-xl';
             productCard.innerHTML = `
                 <img src="${product.imageUrl}" alt="${product.name}" class="w-36 h-36 object-cover rounded-full mb-4 border-4 border-blue-500 product-image"
@@ -157,94 +154,83 @@ document.addEventListener('DOMContentLoaded', () => {
                     Add to Cart
                 </button>
             `;
-            // Attach event listener to the "Add to Cart" button for each product
+            
             productCard.querySelector('.add-to-cart-button').addEventListener('click', (event) => {
-                const productId = parseInt(event.target.dataset.productId); // Get product ID from data attribute
-                const productToAdd = products.find(p => p.id === productId); // Find the full product object
+                const productId = parseInt(event.target.dataset.productId); 
+                const productToAdd = products.find(p => p.id === productId); 
                 if (productToAdd) {
-                    addToCart(productToAdd); // Call the addToCart function
+                    addToCart(productToAdd); 
                 }
             });
-            productGrid.appendChild(productCard); // Add the newly created card to the grid
+            productGrid.appendChild(productCard); 
         });
     };
 
     /**
-     * Adds a product to the cart or increments its quantity if it's already present.
-     * Shows a toast message for feedback.
-     * @param {Object} productToAdd - The product object to be added to the cart.
+     * @param {Object} productToAdd 
      */
     const addToCart = (productToAdd) => {
         const existingItem = cart.find(item => item.product.id === productToAdd.id);
 
         if (existingItem) {
-            existingItem.quantity++; // Increment quantity if item already exists
+            existingItem.quantity++; 
             showToast(`Increased ${productToAdd.name} quantity.`);
         } else {
-            cart.push({ product: productToAdd, quantity: 1 }); // Add new item with quantity 1
+            cart.push({ product: productToAdd, quantity: 1 }); 
             showToast(`Added ${productToAdd.name} to cart!`);
         }
-        renderCart(); // Re-render the cart display to reflect changes
+        renderCart(); 
     };
 
     /**
-     * Removes a product entirely from the cart.
-     * Shows a toast message for feedback.
-     * @param {number} productId - The ID of the product to remove.
+     * @param {number} productId 
      */
     const removeFromCart = (productId) => {
         const itemToRemove = cart.find(item => item.product.id === productId);
         if (itemToRemove) {
-            cart = cart.filter(item => item.product.id !== productId); // Filter out the item
+            cart = cart.filter(item => item.product.id !== productId); 
             showToast(`Removed ${itemToRemove.product.name} from cart.`);
-            renderCart(); // Re-render the cart display
+            renderCart(); 
         }
     };
 
     /**
-     * Updates the quantity of a specific product in the cart.
-     * Ensures quantity does not go below 1. If it drops to 0 or less, the item is removed.
-     * Shows a toast message for feedback.
-     * @param {number} productId - The ID of the product to update.
-     * @param {number} change - The amount to change the quantity by (e.g., +1 for increment, -1 for decrement).
+     * @param {number} productId 
+     * @param {number} change - 
      */
     const updateQuantity = (productId, change) => {
         const itemToUpdate = cart.find(item => item.product.id === productId);
         if (itemToUpdate) {
-            itemToUpdate.quantity += change; // Apply the quantity change
+            itemToUpdate.quantity += change; 
             if (itemToUpdate.quantity <= 0) {
-                removeFromCart(productId); // Remove if quantity becomes zero or negative
+                removeFromCart(productId); 
             } else {
                 showToast(`Updated ${itemToUpdate.product.name} quantity.`);
-                renderCart(); // Re-render the cart display
+                renderCart(); 
             }
         }
     };
 
     /**
-     * Calculates the total price of all items currently in the cart.
-     * @returns {string} - The total price formatted to two decimal places (e.g., "123.45").
+     * @returns {string} 
      */
     const calculateTotal = () => {
         return cart.reduce((total, item) => total + item.product.price * item.quantity, 0).toFixed(2);
     };
 
     /**
-     * Renders the current state of the cart to the sidebar.
-     * Clears existing cart items, populates with current items, updates total price,
-     * and refreshes the cart item count in the header. Manages empty cart message visibility.
      */
     const renderCart = () => {
-        cartItemsList.innerHTML = ''; // Clear existing cart items in the display
+        cartItemsList.innerHTML = ''; 
 
         if (cart.length === 0) {
-            emptyCartMessage.style.display = 'flex'; // Show "Your cart is empty" message
-            cartTotalSpan.textContent = '₹0.00'; // Reset total price display
+            emptyCartMessage.style.display = 'flex'; 
+            cartTotalSpan.textContent = '₹0.00'; 
         } else {
-            emptyCartMessage.style.display = 'none'; // Hide empty message
+            emptyCartMessage.style.display = 'none'; 
             cart.forEach(item => {
                 const cartItemDiv = document.createElement('div');
-                // Apply Tailwind CSS classes for cart item styling
+               
                 cartItemDiv.className = 'flex items-center justify-between bg-gray-800 p-4 rounded-lg mb-4 shadow-md';
                 cartItemDiv.innerHTML = `
                     <img src="${item.product.imageUrl}" alt="${item.product.name}" class="w-16 h-16 object-cover rounded-md mr-4 border border-blue-500" />
@@ -264,27 +250,27 @@ document.addEventListener('DOMContentLoaded', () => {
                     </button>
                 `;
 
-                // Add event listeners for quantity and remove buttons
+               
                 cartItemDiv.querySelectorAll('.quantity-button').forEach(button => {
                     button.addEventListener('click', (event) => {
                         const productId = parseInt(event.target.dataset.productId);
                         const change = parseInt(event.target.dataset.change);
-                        updateQuantity(productId, change); // Call updateQuantity
+                        updateQuantity(productId, change);
                     });
                 });
                 cartItemDiv.querySelector('.remove-item-button').addEventListener('click', (event) => {
-                    // Use currentTarget to ensure we get the button's data-product-id
+                  
                     removeFromCart(parseInt(event.currentTarget.dataset.productId));
                 });
 
-                cartItemsList.appendChild(cartItemDiv); // Add the cart item to the list
+                cartItemsList.appendChild(cartItemDiv); 
             });
-            cartTotalSpan.textContent = `₹${calculateTotal()}`; // Update total price display
+            cartTotalSpan.textContent = `₹${calculateTotal()}`; 
         }
-        // Update the total number of items shown in the header cart icon's badge
+       
         const totalItemsInCart = cart.reduce((count, item) => count + item.quantity, 0);
         cartCountSpan.textContent = totalItemsInCart;
-        // Add/remove bounce animation based on cart items
+    
         if (totalItemsInCart > 0) {
             cartCountSpan.classList.add('animate-bounce');
         } else {
@@ -293,26 +279,23 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     /**
-     * Toggles the visibility of the cart sidebar by adding/removing CSS transform classes.
-     */
+   **/
     const toggleCartSidebar = () => {
-        isCartOpen = !isCartOpen; // Toggle the state
+        isCartOpen = !isCartOpen; 
         if (isCartOpen) {
-            cartSidebar.classList.remove('translate-x-full'); // Slide in
+            cartSidebar.classList.remove('translate-x-full');
             cartSidebar.classList.add('translate-x-0');
         } else {
-            cartSidebar.classList.add('translate-x-full'); // Slide out
+            cartSidebar.classList.add('translate-x-full'); 
             cartSidebar.classList.remove('translate-x-0');
         }
     };
 
     /**
-     * Shows the authentication modal (Login or Sign Up view).
-     * @param {string} view - 'login' or 'signup' to set the initial form view.
+     * @param {string} view 
      */
     const showAuthModal = (view) => {
-        authModal.classList.remove('hidden'); // Make the modal visible
-        // Trigger the scale animation after a very short delay
+        authModal.classList.remove('hidden'); 
         setTimeout(() => {
             authModal.classList.add('active');
             if (view === 'signup') {
@@ -324,21 +307,18 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     /**
-     * Hides the authentication modal with an animation and resets forms.
      */
     const hideAuthModal = () => {
-        authModal.classList.remove('active'); // Start the exit animation
-        // Hide completely after the transition duration
+        authModal.classList.remove('active');
         setTimeout(() => {
             authModal.classList.add('hidden');
-            loginForm.reset(); // Clear login form fields
-            signupForm.reset(); // Clear signup form fields
-        }, 300); // Matches the CSS transition duration
+            loginForm.reset(); 
+            signupForm.reset(); 
+        }, 300); 
     };
 
     /**
-     * Switches the authentication modal to the Login view.
-     */
+ */
     const showLoginView = () => {
         authModalTitle.textContent = 'Login to Shree Nand Paints';
         loginSection.classList.remove('hidden');
@@ -346,7 +326,7 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     /**
-     * Switches the authentication modal to the Sign Up view.
+   
      */
     const showSignupView = () => {
         authModalTitle.textContent = 'Sign Up for Shree Nand Paints';
@@ -355,13 +335,11 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     /**
-     * Handles the login process (simulated).
-     * Checks credentials against stored users in localStorage.
-     * @param {Event} event - The form submission event, used to prevent default behavior.
+
+     * @param {Event} event 
      */
     const handleLogin = (event) => {
-        event.preventDefault(); // Prevent default browser form submission (page reload)
-
+        event.preventDefault(); 
         const username = loginUsernameInput.value.trim();
         const password = loginPasswordInput.value.trim();
 
@@ -370,27 +348,26 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
 
-        // Check if user exists and password matches
+       
         if (users[username] && users[username].password === password) {
             isLoggedIn = true;
-            authBtn.textContent = `Logout (${username})`; // Show logged-in username
-            // Change button color for logged-in state
+            authBtn.textContent = `Logout (${username})`; 
+ 
             authBtn.classList.remove('bg-purple-600', 'hover:bg-purple-700');
             authBtn.classList.add('bg-red-600', 'hover:bg-red-700');
             showToast(`Welcome, ${username}! You are now logged in.`, 4000);
-            hideAuthModal(); // Close modal on successful login
+            hideAuthModal(); 
         } else {
-            showToast('Invalid username or password.', 4000); // Feedback for incorrect credentials
+            showToast('Invalid username or password.', 4000); 
         }
     };
 
     /**
-     * Handles the sign-up process (simulated).
-     * Stores new user credentials in localStorage.
-     * @param {Event} event - The form submission event, used to prevent default behavior.
+
+     * @param {Event} event 
      */
     const handleSignup = (event) => {
-        event.preventDefault(); // Prevent default browser form submission
+        event.preventDefault(); 
 
         const username = signupUsernameInput.value.trim();
         const password = signupPasswordInput.value.trim();
@@ -409,70 +386,65 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
 
-        // Store new user
+
         users[username] = { password: password };
-        localStorage.setItem('registeredUsers', JSON.stringify(users)); // Save to localStorage
+        localStorage.setItem('registeredUsers', JSON.stringify(users)); 
 
         showToast('Account created successfully! You can now log in.', 4000);
-        signupForm.reset(); // Clear signup form
-        showLoginView(); // Switch to login view after signup
+        signupForm.reset();
+        showLoginView(); 
     };
 
     /**
-     * Handles the logout process.
-     * Resets login status, clears cart, and updates UI. Shows toast message.
      */
     const handleLogout = () => {
         isLoggedIn = false;
-        cart = []; // Clear the cart when logging out
-        authBtn.textContent = 'Login'; // Change button text back
-        // Change button color back to login state
+        cart = []; 
+        authBtn.textContent = 'Login'; 
+      
         authBtn.classList.remove('bg-red-600', 'hover:bg-red-700');
         authBtn.classList.add('bg-purple-600', 'hover:bg-purple-700');
-        renderCart(); // Update cart display to show it's cleared
+        renderCart(); 
         showToast('You have been logged out. Your cart has been cleared.', 4000);
     };
 
-    // --- Event Listeners Initialization ---
-    toggleCartBtn.addEventListener('click', toggleCartSidebar); // Open/close cart sidebar
-    closeCartBtn.addEventListener('click', toggleCartSidebar); // Close cart sidebar
+  
+    toggleCartBtn.addEventListener('click', toggleCartSidebar); 
+    closeCartBtn.addEventListener('click', toggleCartSidebar);
 
-    // Main auth button in header
+
     authBtn.addEventListener('click', () => {
         if (isLoggedIn) {
             handleLogout();
         } else {
-            showAuthModal('login'); // Show login view by default
+            showAuthModal('login'); 
         }
     });
 
-    // Modal navigation buttons
+   
     showSignupBtn.addEventListener('click', (e) => {
-        e.preventDefault(); // Prevent form submission
+        e.preventDefault(); 
         showSignupView();
     });
     showLoginBtn.addEventListener('click', (e) => {
-        e.preventDefault(); // Prevent form submission
+        e.preventDefault();
         showLoginView();
     });
-    closeAuthModalBtn.addEventListener('click', hideAuthModal); // Close button inside modal
-    // Close modal if clicked on the dimmed background overlay
+    closeAuthModalBtn.addEventListener('click', hideAuthModal); 
+   
     authModal.addEventListener('click', (event) => {
         if (event.target === authModal) {
             hideAuthModal();
         }
     });
 
-    // Form submissions
+ 
     loginForm.addEventListener('submit', handleLogin);
     signupForm.addEventListener('submit', handleSignup);
 
-    // --- Initial Application Setup ---
-    renderProducts(); // Populate the product grid with items
-    renderCart();     // Initialize cart display (will show as empty initially)
+  
+    renderProducts(); 
+    renderCart();     
 
-    // Check if user was previously logged in (e.g., from a persistent session)
-    // For this client-side example, login state isn't persisted beyond session,
-    // but a real app would load this from storage.
-    // For now, we only update the button on actual login/logout actions.
+
 });
