@@ -26,32 +26,28 @@ document.addEventListener('DOMContentLoaded', () => {
     const confirmPasswordInput = document.getElementById('confirmPassword');
     const showLoginBtn = document.getElementById('showLoginBtn');
 
-    const messageToast = document.getElementById('messageToast'); // The toast notification container
-    const toastText = document.getElementById('toastText'); // The text inside the toast
+    const messageToast = document.getElementById('messageToast');
+    const toastText = document.getElementById('toastText'); 
 
-    // --- Application State ---
-    let cart = []; // Stores products currently in the cart: { product: ProductObject, quantity: number }
-    let isCartOpen = false; // Boolean to track if the cart sidebar is currently open
-    let isLoggedIn = false; // Boolean to track the user's login status (simulated)
-    // Client-side storage for users. In a real app, this would be a database.
-    let users = JSON.parse(localStorage.getItem('registeredUsers')) || {}; // Load users from localStorage
-
-    // --- Product Data (Asian Paints themed with bucket images and descriptions) ---
-    // IMPORTANT: Replace the 'imageUrl' values with direct links to your actual product images.
-    // Example: 'imageUrl': 'https://yourwebsite.com/images/apex_ultima_20L.jpg'
+    let cart = []; 
+    let isCartOpen = false; 
+    let isLoggedIn = false; 
+    
+    let users = JSON.parse(localStorage.getItem('registeredUsers')) || {}; 
+    
     const products = [
         {
             id: 1,
             name: 'Asian Paints Apex Ultima Bucket (20L)',
             price: 9999.00,
-            imageUrl: 'https://www.asianpaints.com/content/dam/asian_paints/products/packshots/exterior-walls-apex-ultima-asian-paints.png', // Replace with your image URL
+            imageUrl: 'https://www.asianpaints.com/content/dam/asian_paints/products/packshots/exterior-walls-apex-ultima-asian-paints.png', 
             description: 'Premium exterior emulsion for ultimate protection and beauty. Experience vibrant colors and a long-lasting finish from Asian Paints.'
         },
         {
             id: 2,
             name: 'Asian Paints Royale Luxery Emultion (20L)',
             price: 3499.00,
-            imageUrl: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQyWqTdj4RZ2T_yu1_OSL7z143ujuJjyhxWCQ&s', // Replace with your image URL
+            imageUrl: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQyWqTdj4RZ2T_yu1_OSL7z143ujuJjyhxWCQ&s', 
             description: 'Asian Paints Royale Luxury Emulsion is known for its luxurious finish and high durability It Has A Technology Called Teflon.'
 
         },
@@ -59,80 +55,79 @@ document.addEventListener('DOMContentLoaded', () => {
             id: 3,
             name: 'Asian Paints Tractor Emulsion (20L)',
             price: 2499.00,
-            imageUrl: 'https://www.asianpaints.com/content/dam/asian_paints/products/packshots/interior-walls-tractor-emulsion-asian-paints.png', // Replace with your image URL
+            imageUrl: 'https://www.asianpaints.com/content/dam/asian_paints/products/packshots/interior-walls-tractor-emulsion-asian-paints.png', 
             description: 'Economical interior paint providing a smooth and matt finish. Perfect for budget-friendly makeovers with Asian Paints reliability.'
         },
         {
             id: 4,
             name: 'Asian Paints Damp Proof (20L)',
             price: 4999.00,
-            imageUrl: 'https://www.asianpaints.com/content/dam/asian_paints/products/packshots/SC-dampproof.png', // Replace with your image URL
+            imageUrl: 'https://www.asianpaints.com/content/dam/asian_paints/products/packshots/SC-dampproof.png', 
             description: 'Asian Paints SmartCare Damp Proof is a fiber reinforced elastomeric liquid applied water proofing membrane. '
         },
         {
             id: 5,
             name: 'Asian Paints SmartCare Damp Sheath (20L)',
             price: 1299.00,
-            imageUrl: 'https://www.asianpaints.com/content/dam/asian_paints/products/packshots/sc-Dampsheath-exterior-new.png', // Replace with your image URL
+            imageUrl: 'https://www.asianpaints.com/content/dam/asian_paints/products/packshots/sc-Dampsheath-exterior-new.png', 
             description: 'Waterproofing solution for interior and exterior surfaces. Protects against efflorescence and damp walls, part of Asian Paints SmartCare.We Sell Both Interior And Exterior'
         },
         {
             id: 6,
             name: 'Asian Paints Apcolite Premium Gloss (1L-20L)',
             price: 5000.00,
-            imageUrl: 'https://static.asianpaints.com/content/dam/asian_paints/products/packshots/metals-apcolite-premium-gloss-enamel-asian-paints.png', // Replace with your image URL
+            imageUrl: 'https://static.asianpaints.com/content/dam/asian_paints/products/packshots/metals-apcolite-premium-gloss-enamel-asian-paints.png', 
             description: 'High-gloss enamel paint for wood, metal, and masonry. Offers a tough, durable, and mirror-like finish from Asian Paints Apcolite' 
         },
         {
             id: 7,
             name: 'Asian Paints TruCare Interior Wall Primer - Water Thinnable (20L)',
             price: 1999.00,
-            imageUrl: 'https://static.asianpaints.com/content/dam/asian_paints/products/packshots/0360.png', // Replace with your image URL
+            imageUrl: 'https://static.asianpaints.com/content/dam/asian_paints/products/packshots/0360.png', 
             description: 'Water-based interior wall primer ensuring excellent adhesion and a smooth base for topcoats. A vital step from Asian Paints TruCare.'
         },
         {
             id: 8,
             name: 'Asian Paints Tractor Uno (20Kg)',
             price: 850.00,
-            imageUrl: 'https://static.asianpaints.com/content/dam/asian_paints/products/packshots/interior-walls-tractor-uno-asian-paints.png', // Replace with your image URL
+            imageUrl: 'https://static.asianpaints.com/content/dam/asian_paints/products/packshots/interior-walls-tractor-uno-asian-paints.png', 
             description: 'Having a beautiful home at an affordable price is no more a dream. This water-based acrylic distemper from Asian Paints has 900+ shades to choose from to make sure you get a home in the colour of your choice. Moreover, Tractor Uno is a washable, lead-free paint with a stylish matt finish.'
         },
         {
             id: 9,
             name: 'Asian Paints Damp Proof Advanced (20L)',
             price: 3800.00,
-            imageUrl: 'https://static.asianpaints.com/content/dam/asian_paints/products/packshots/DP-Advanced-Packshot.png', // Replace with your image URL
+            imageUrl: 'https://static.asianpaints.com/content/dam/asian_paints/products/packshots/DP-Advanced-Packshot.png', 
             description: 'Formulated with select elastomeric and resilient acrylic polymers and reinforcing polyester fibers, Damp Proof Advanced provides superior whiteness & unmatched waterproofing to Terraces & Exterior walls.'
         },
         {
             id: 10,
             name: 'Asian Paints Damp Proof Xtreme (20L)',
             price: 2950.00,
-            imageUrl: 'https://static.asianpaints.com/content/dam/asian_paints/products/packshots/SC-dampproof-xtreme-new.png', // Replace with your image URL
+            imageUrl: 'https://static.asianpaints.com/content/dam/asian_paints/products/packshots/SC-dampproof-xtreme-new.png', 
             description: 'To protect your homes from leakage by extreme rains, Asian Paints brings to you SmartCare Damp Proof Xtreme with Triple Flex-Armour Layer which offers 12 years of waterproofing warranty on terraces and exterior walls.'
         },
         {
             id: 11,
             name: 'Sand Papers',
             price: 1100.00,
-            imageUrl: 'https://static.asianpaints.com/content/dam/asian_paints/products/Tools/sand-paper-spotlight-asian-paints.jpeg', // Replace with your image URL
+            imageUrl: 'https://static.asianpaints.com/content/dam/asian_paints/products/Tools/sand-paper-spotlight-asian-paints.jpeg', 
             description: 'We Provide You With Many Of the sandpapers quality , grit whether you want just call us and tell us which grit sandpaper do you want'
         },
         {
             id: 12,
             name: 'Asian Paints Tools **Note- Price May Vary**',
             price:  5000.00,
-            imageUrl: 'https://static.asianpaints.com/content/dam/asian_paints/products/Tools/landing-page/mechanized-equipment-trucare-wall-sander-asian-paints.jpeg', // Replace with your image URL
+            imageUrl: 'https://static.asianpaints.com/content/dam/asian_paints/products/Tools/landing-page/mechanized-eq/uipment-trucare-wall-sander-asian-paints.jpeg', 
             description: 'We Have Many Types Of Asian Paints Tools , Whether It Comes to Brush Or Rollers , Sanding Machine , Putty Mixer , Spray Gun , etc you can get any of the asian paints tools you can book your asian paints tools by just calling us :)' 
         }
         ];
 
-    // --- UI Utility Functions ---
 
     /**
      * Displays a temporary toast message at the bottom of the screen.
-     * @param {string} message - The text content for the toast message.
-     * @param {number} duration - How long the toast should be visible in milliseconds (default: 3000ms).
+     * @param {string} message 
+     * @param {number} duration 
      */
     const showToast = (message, duration = 3000) => {
         toastText.textContent = message; // Set the message text
