@@ -405,7 +405,7 @@ document.addEventListener('DOMContentLoaded', () => {
         authBtn.classList.remove('bg-red-600', 'hover:bg-red-700');
         authBtn.classList.add('bg-purple-600', 'hover:bg-purple-700');
         renderCart(); 
-        showToast('You have been logged out. Your cart has been cleared.', 4000);
+        showToast('You have been logged out. Your cart has been cleared. Thanks For Visiting!', 4000);
     };
 
   
